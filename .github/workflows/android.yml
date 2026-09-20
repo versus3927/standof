@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files for debug
+        run: ls -R
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -26,7 +29,8 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          g++ -shared -fPIC -o build/libfemboy_strike.so main.cpp memory.cpp esp.cpp menu.cpp -I. -ldl
+          # Мы используем *.cpp, чтобы компилятор взял ВСЕ файлы в папке
+          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Build APK
         run: |
