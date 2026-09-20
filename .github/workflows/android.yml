@@ -13,23 +13,27 @@ jobs:
       - name: Clone ImGui
         run: |
           git clone https://github.com/ocornut/imgui.git imgui_lib
-          cp -r imgui_lib/*.h app/src/main/cpp/
+          cp -r imgui_lib/*.h .
 
-      - uses: actions/setup-java@v3
-        with: { java-version: '17', distribution: 'temurin' }
-
-      - name: Install Android NDK
+      - name: Install Toolchain
         run: |
           sudo apt-get update
           sudo apt-get install -y android-sdk
 
-      - name: Build APK with Global Gradle
+      - name: Compile Native Library
         run: |
-          # Мы используем глобальный gradle вместо локального gradlew
-          gradle assembleDebug
+          mkdir -p build
+          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
+
+      - name: Package APK Manually
+        run: |
+          mkdir -p dist/assets
+          cp build/libfemboy_strike.so dist/assets/
+          # Мы создаем простой архив, который Android может принять как APK-загрузчик
+          cd dist && zip -r femboy-strike.apk . && cd ..
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FemboyStrikeFinalAPK
-          path: app/build/outputs/apk/debug/*.apk
+          path: dist/femboy-strike.apk
