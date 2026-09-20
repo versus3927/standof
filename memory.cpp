@@ -1,8 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include "offsets.h"
 
 template <typename T>
 T read_mem(int pid, uintptr_t address) {
