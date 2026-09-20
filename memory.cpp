@@ -1,24 +1,33 @@
 #include "offsets.h"
-template <typename T>
-T read_mem(int pid, uintptr_t address) {
-    T value;
-    std::string mem_path = "/proc/" + std::to_string(pid) + "/mem";
-    std::ifstream mem_file(mem_path, std::ios::binary);
-    if (!mem_file.is_open()) return T();
-    mem_file.seekg(address);
-    mem_file.read(reinterpret_cast<char*>(&value), sizeof(T));
-    mem_//file.close();
-    return value;
+
+uintptr_t read_uintptr(int pid, uintptr_t addr) {
+    uintptr_t val = 0;
+    std::ifstream f("/proc/" + std::to_string(pid) + "/mem", std::ios::binary);
+    if (f) { f.seekg(addr); f.read((char*)&val, sizeof(val)); }
+    return val;
 }
-int get_pid(std::string process_name) {
-    std::string cmd = "pidof " + process_name;
-    FILE* pipe = popen(cmd.c_str(), "r");
-    if (!pipe) return -1;
-    char buffer[128];
-    if (fgets(buffer, 128, pipe) != NULL) {
-        pclose(pipe);
-        return std::stoi(buffer);
-    }
-    pclose(pipe);
-    return -1;
+
+int read_int(int pid, uintptr_t addr) {
+    int val = 0;
+    std::ifstream f("/proc/" + std::to_string(pid) + "/mem", std::ios::binary);
+    if (f) { f.seekg(addr); f.read((char*)&val, sizeof(val)); }
+    return val;
+}
+
+float read_float(int pid, uintptr_t addr) {
+    float val = 0;
+    std::ifstream f("/proc/" + std::to_string(pid) + "/mem", std::ios::binary);
+    if (f) { f.seekg(addr); f.read((char*)&val, sizeof(val)); }
+    return val;
+}
+
+int get_pid(std::string name) {
+    std::string cmd = "pidof " + name;
+    FILE* p = popen(cmd.c_str(), "r");
+    if (!p) return -1;
+    char b[128];
+    int pid = -1;
+    if (fgets(b, 128, p)) pid = std::stoi(b);
+    pclose(p);
+    return pid;
 }
