@@ -12,6 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Find and Move Files
+        run: |
+          echo "Searching for source files..."
+          find . -name "*.cpp" -exec cp {} . \;
+          find . -name "*.h" -exec cp {} . \;
+          ls -la
+
       - name: Clone ImGui Library
         run: |
           git clone https://github.com/ocornut/imgui.git imgui_lib
@@ -36,8 +43,7 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          # Явно перечисляю файлы, чтобы исключить любые ошибки с *.cpp
-          g++ -shared -fPIC -o build/libfemboy_strike.so main.cpp memory.cpp esp.cpp menu.cpp -I. -ldl
+          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Build APK
         run: |
