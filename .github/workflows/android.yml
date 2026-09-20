@@ -1,4 +1,4 @@
-name: Femboy Strike Final Build
+name: Femboy Strike Root Build
 
 on:
   push: { branches: [ main ] }
@@ -10,17 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Fix Directory Structure
-        run: |
-          mkdir -p app/src/main/cpp
-          # Если файлы случайно остались в корне, переносим их в папку
-          find . -maxdepth 1 -name "*.cpp" -exec cp {} app/src/main/cpp/ \;
-          find . -maxdepth 1 -name "*.h" -exec cp {} app/src/main/cpp/ \;
-
       - name: Clone ImGui
         run: |
           git clone https://github.com/ocornut/imgui.git imgui_lib
-          cp -r imgui_lib/*.h app/src/main/cpp/
+          cp -r imgui_lib/*.h .
 
       - name: Install Toolchain
         run: |
@@ -30,13 +23,13 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          # Теперь мы точно знаем, что файлы там, потому что мы их сами перенесли!
-          g++ -shared -fPIC -o build/libfemboy_strike.so app/src/main/cpp/*.cpp -Iapp/src/main/cpp -ldl
+          # Компилируем ВСЁ в корне, никаких путей, никаких папок!
+          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Package APK Manually
         run: |
-          mkdir -p dist/assets
-          cp build/libfemboy_strike.so dist/assets/
+          mkdir -p dist
+          cp build/libfemboy_strike.so dist/
           cd dist && zip -r femboy-strike.apk . && cd ..
 
       - name: Upload APK
