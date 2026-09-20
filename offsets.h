@@ -30,4 +30,10 @@ namespace offsets {
         inline int matrix() { return 0xF0; }
     }
 }
+template <typename T>
+T read_mem(int pid, uintptr_t address);
+int get_pid(std::string process_name);
+void run_esp_cycle(int pid);
+void render_femboy_menu();
 #endif
+
