@@ -36,7 +36,8 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
+          # Явно перечисляю файлы, чтобы исключить любые ошибки с *.cpp
+          g++ -shared -fPIC -o build/libfemboy_strike.so main.cpp memory.cpp esp.cpp menu.cpp -I. -ldl
 
       - name: Build APK
         run: |
