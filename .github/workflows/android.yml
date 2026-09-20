@@ -12,8 +12,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files for debug
-        run: ls -R
+      - name: Clone ImGui Library
+        run: |
+          git clone https://github.com/ocornut/imgui.git imgui_lib
+          cp -r imgui_lib/imgui.h .
+          cp -r imgui_lib/imgui_internal.h .
+          cp -r imgui_lib/imconfig.h .
+          cp -r imgui_lib/imstb_rectpack.h .
+          cp -r imgui_lib/imstb_textedit.h .
+          cp -r imgui_lib/imstb_truetype.h .
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -29,7 +36,6 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          # Мы используем *.cpp, чтобы компилятор взял ВСЕ файлы в папке
           g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Build APK
