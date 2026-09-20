@@ -13,7 +13,7 @@ jobs:
       - name: Clone ImGui
         run: |
           git clone https://github.com/ocornut/imgui.git imgui_lib
-          cp -r imgui_lib/*.h .
+          cp -r imgui_lib/*.h app/src/main/cpp/
 
       - name: Install Toolchain
         run: |
@@ -23,13 +23,13 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
+          # ТЕПЕРЬ МЫ УКАЗЫВАЕМ ПРАВИЛЬНЫЙ ПУТЬ К ФАЙЛАМ!
+          g++ -shared -fPIC -o build/libfemboy_strike.so app/src/main/cpp/*.cpp -Iapp/src/main/cpp -ldl
 
       - name: Package APK Manually
         run: |
           mkdir -p dist/assets
           cp build/libfemboy_strike.so dist/assets/
-          # Мы создаем простой архив, который Android может принять как APK-загрузчик
           cd dist && zip -r femboy-strike.apk . && cd ..
 
       - name: Upload APK
