@@ -22,9 +22,12 @@ jobs:
 
       - name: Compile Native Library
         run: |
+          # 1. Создаем папку для сборки
           mkdir -p build
-          # ТЕПЕРЬ МЫ УКАЗЫВАЕМ ПРАВИЛЬНЫЙ ПУТЬ К ФАЙЛАМ!
-          g++ -shared -fPIC -o build/libfemboy_strike.so app/src/main/cpp/*.cpp -Iapp/src/main/cpp -ldl
+          # 2. ПЕРЕХОДИМ В ПАПКУ С КОДОМ, чтобы компилятор всё видел!
+          cd app/src/main/cpp
+          # 3. Компилируем прямо здесь
+          g++ -shared -fPIC -o ../../../build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Package APK Manually
         run: |
