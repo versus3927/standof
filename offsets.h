@@ -6,9 +6,7 @@
 #include <iostream>
 
 namespace offsets {
-    namespace base {
-        inline uint64_t player_manager() { return 180740496; }
-    }
+    namespace base { inline uint64_t player_manager() { return 180740496; } }
     namespace manager {
         inline int ptr1() { return 0x90; }
         inline int ptr2() { return 0x10; }
@@ -29,12 +27,13 @@ namespace offsets {
     namespace transform {
         inline int position() { return 0x44; }
     }
-    namespace camera {
-        inline int matrix() { return 0xF0; }
-    }
 }
-template <typename T> T read_mem(int pid, uintptr_t address);
-int get_pid(std::string process_name);
+
+// Простые функции без шаблонов, чтобы компилятор не тупил!
+uintptr_t read_uintptr(int pid, uintptr_t addr);
+int read_int(int pid, uintptr_t addr);
+float read_float(int pid, uintptr_t addr);
+int get_pid(std::string name);
 void run_esp_cycle(int pid);
 void render_femboy_menu();
 #endif
