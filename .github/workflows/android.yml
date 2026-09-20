@@ -1,4 +1,4 @@
-name: Femboy Strike Root Build
+name: Femboy Strike Final Build
 
 on:
   push: { branches: [ main ] }
@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Total Cleanup (Очистка от мусора)
+        run: |
+          # Удаляем все файлы, которые могут помешать, прямо в корне!
+          rm -f build.gradle settings.gradle AndroidManifest.xml MainActivity.kt CMakeLists.txt
+          # Удаляем папку app, если она осталась
+          rm -rf app
 
       - name: Clone ImGui
         run: |
@@ -23,7 +30,7 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          # Компилируем ВСЁ в корне, никаких путей, никаких папок!
+          # Теперь всё чисто, компилируем только то, что нужно!
           g++ -shared -fPIC -o build/libfemboy_strike.so *.cpp -I. -ldl
 
       - name: Package APK Manually
