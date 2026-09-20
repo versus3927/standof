@@ -1,3 +1,5 @@
+package com.femboy.strike
+
 import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
@@ -7,7 +9,6 @@ import java.io.*
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
         val btn = Button(this).apply {
             text = "ЗАПУСТИТЬ МАГИЮ, НЯ! ✨"
         }
