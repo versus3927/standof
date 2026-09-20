@@ -1,7 +1,4 @@
-#include <iostream>
-#include <vector>
-#include "offsets.h"
-#include "memory.cpp"
+
 
 void run_esp_cycle(int pid) {
     // 1. Вход в Player Manager
