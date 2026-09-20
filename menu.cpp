@@ -1,5 +1,3 @@
-#include "imgui.h"
-#include "offsets.h"
 
 struct CheatConfig {
     bool esp_enabled = false;
