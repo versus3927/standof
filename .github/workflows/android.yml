@@ -1,4 +1,4 @@
-name: Femboy Strike Elite Build
+name: Femboy Strike Build
 
 on:
   push: { branches: [ main ] }
@@ -15,14 +15,16 @@ jobs:
           cp -r imgui_lib/*.h .
       - uses: actions/setup-java@v3
         with: { java-version: '17', distribution: 'temurin' }
-      - name: Build Native & APK
+      - name: Install Android NDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y android-sdk
+      - name: Compile Native Library
         run: |
           mkdir -p app/src/main/jniLibs/arm64-v8a
           g++ -shared -fPIC -o app/src/main/jniLibs/arm64-v8a/libfemboy_strike.so *.cpp -I. -ldl
-          echo "Packaging Elite APK via Gradle..."
-          mkdir -p dist
-          touch dist/femboy-strike-elite.apk
-      - uses: actions/upload-artifact@v4
+      - name: Upload Library
+        uses: actions/upload-artifact@v4
         with:
-          name: FemboyStrikeEliteAPK
-          path: dist/femboy-strike-elite.apk
+          name: FemboyStrikeLib
+          path: app/src/main/jniLibs/arm64-v8a/libfemboy_strike.so
