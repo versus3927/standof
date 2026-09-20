@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "offsets.h"
-
+#include "memory.cpp"
 
 void run_esp_cycle(int pid) {
     // 1. Вход в Player Manager
@@ -24,19 +24,19 @@ void run_esp_cycle(int pid) {
 
         if (!player_entry) continue;
 
-        // Проверка команды (чтобы не подсвечивать своих, ня!)
+        // Проверка команды
         int team = read_mem<int>(pid, player_entry + offsets::player::team());
-        int local_team = read_mem<int>(pid, read_mem<uintptr_t>(pid, ptr3 + offsets::manager::local()) + offsets::player::team());
+        uintptr_t local_ptr = read_mem<uintptr_t>(pid, ptr3 + offsets::manager::local());
+        int local_team = read_mem<int>(pid, local_ptr + offsets::player::team());
 
         if (team == local_team) continue;
 
-        // Получаем координаты X, Y, Z
+        // Координаты
         uintptr_t transform_data = read_mem<uintptr_t>(pid, player_entry + offsets::player::transform_data());
         float posX = read_mem<float>(pid, transform_data + offsets::transform::position());
         float posY = read_mem<float>(pid, transform_data + offsets::transform::position() + 4);
         float posZ = read_mem<float>(pid, transform_data + offsets::transform::position() + 8);
 
-        // Здесь будет вызов функции отрисовки (WorldToScreen)
         std::cout << "Враг обнаружен! Позиция: " << posX << ", " << posY << ", " << posZ << " ✨" << std::endl;
     }
 }
