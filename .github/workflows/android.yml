@@ -10,6 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Fix Directory Structure
+        run: |
+          mkdir -p app/src/main/cpp
+          # Если файлы случайно остались в корне, переносим их в папку
+          find . -maxdepth 1 -name "*.cpp" -exec cp {} app/src/main/cpp/ \;
+          find . -maxdepth 1 -name "*.h" -exec cp {} app/src/main/cpp/ \;
+
       - name: Clone ImGui
         run: |
           git clone https://github.com/ocornut/imgui.git imgui_lib
@@ -23,13 +30,8 @@ jobs:
       - name: Compile Native Library
         run: |
           mkdir -p build
-          # Используем полные пути от корня репозитория!
-          g++ -shared -fPIC -o build/libfemboy_strike.so \
-          app/src/main/cpp/main.cpp \
-          app/src/main/cpp/memory.cpp \
-          app/src/main/cpp/esp.cpp \
-          app/src/main/cpp/menu.cpp \
-          -Iapp/src/main/cpp -ldl
+          # Теперь мы точно знаем, что файлы там, потому что мы их сами перенесли!
+          g++ -shared -fPIC -o build/libfemboy_strike.so app/src/main/cpp/*.cpp -Iapp/src/main/cpp -ldl
 
       - name: Package APK Manually
         run: |
