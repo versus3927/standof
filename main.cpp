@@ -1,9 +1,3 @@
-#include <iostream>
-#include <thread>
-#include "offsets.h"
-#include "memory.cpp"
-#include "esp.cpp"
-#include "menu.cpp"
 
 // Функция, которая будет работать в отдельном потоке и обновлять ESP
 void esp_thread(int pid) {
