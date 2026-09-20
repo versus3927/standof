@@ -1,5 +1,4 @@
 #include "offsets.h"
-
 template <typename T>
 T read_mem(int pid, uintptr_t address) {
     T value;
@@ -8,10 +7,9 @@ T read_mem(int pid, uintptr_t address) {
     if (!mem_file.is_open()) return T();
     mem_file.seekg(address);
     mem_file.read(reinterpret_cast<char*>(&value), sizeof(T));
-    mem_file.close();
+    mem_//file.close();
     return value;
 }
-
 int get_pid(std::string process_name) {
     std::string cmd = "pidof " + process_name;
     FILE* pipe = popen(cmd.c_str(), "r");
