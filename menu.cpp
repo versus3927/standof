@@ -1,4 +1,5 @@
-
+#include "imgui.h"  // ВОТ ЭТОА СТРОКА, КОТОРУЮ МЫ ЗАБЫЛИ!
+#include "offsets.h"
 struct CheatConfig {
     bool esp_enabled = false;
     bool box_esp = false;
